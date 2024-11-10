@@ -16,6 +16,7 @@ public class FileHandlerStack
         this.stackModel = new StackModel(outputHandler);
         this.outputHandler = outputHandler; // Инициализация делегата вывода
     }
+    
     public void ReadFile()
     {
         if (!File.Exists(filePath))
@@ -27,6 +28,7 @@ public class FileHandlerStack
         try
         {
             string[] lines = File.ReadAllLines(filePath);
+            
             if (lines.Length == 0 || (lines.Length == 1 && string.IsNullOrWhiteSpace(lines[0])))
             {
                 outputHandler($"Файл {filePath} пуст.");
@@ -58,8 +60,7 @@ public class FileHandlerStack
             outputHandler($"Ошибка при перезаписи файла: {ex.Message}");
         }
     }
-
-
+    
     public void ProcessLine(string line)
     {
         string[] commands = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);

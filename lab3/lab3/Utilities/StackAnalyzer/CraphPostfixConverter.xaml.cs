@@ -2,9 +2,9 @@
 
 namespace lab3.Utilities.StackAnalyzer;
 
-public partial class GraphStack : Window
+public partial class CraphPostfixConverter : Window
 {
-    public GraphStack(double[] dataSizes, double[] times)
+    public CraphPostfixConverter(double[] dataSizes, double[] times)
     {
         InitializeComponent();
         wpfPlot.Plot.Add.Scatter(dataSizes, times);

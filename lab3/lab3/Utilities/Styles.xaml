@@ -182,4 +182,125 @@
         </Setter>
     </Style>
     
+    <!-- Стиль для попап файла --> 
+    <Style x:Key="PopUp" TargetType="ComboBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="{StaticResource EuclidSquareRegular}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="360"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Border x:Name="border" 
+                                Background="#FFFFFF" 
+                                CornerRadius="10" 
+                                SnapsToDevicePixels="True" 
+                                BorderBrush="#FFFFFF" 
+                                BorderThickness="1"
+                                Width="360">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+
+                                <ToggleButton Focusable="False" 
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                              ClickMode="Press" 
+                                              Background="Transparent" 
+                                              BorderBrush="Transparent" 
+                                              Grid.Column="0" 
+                                              HorizontalAlignment="Stretch" 
+                                              VerticalAlignment="Stretch"
+                                              Cursor="Hand"> <!-- Изменение курсора на "руку" -->
+                                    <ContentPresenter x:Name="contentPresenter" 
+                                                      Content="{TemplateBinding SelectionBoxItem}" 
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                      HorizontalAlignment="Left" 
+                                                      VerticalAlignment="Center" 
+                                                      Margin="10,0,0,0" />
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="Cursor" Value="Hand"/> <!-- Изменение курсора -->
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+
+                                <!-- Стрелка для раскрытия -->
+                                <Path Data="M 0 0 L 4 4 L 8 0 Z" 
+                                      Width="10" 
+                                      Height="6" 
+                                      Fill="Black" 
+                                      RenderTransformOrigin="0.5,0.5" 
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      Grid.Column="1"
+                                      Margin="0,0,10,0"/>
+                            </Grid>
+                        </Border>
+                        <Popup Name="Popup" 
+                               IsOpen="{TemplateBinding IsDropDownOpen}" 
+                               Placement="Bottom" 
+                               Focusable="False" 
+                               AllowsTransparency="True" 
+                               PopupAnimation="Slide">
+                            <Border Name="DropDownBorder" 
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#FFFFFF" 
+                                    BorderThickness="1" 
+                                    CornerRadius="10"
+                                    Width="360">
+                                <ScrollViewer Margin="4">
+                                    <!-- ItemsPresenter для элементов списка -->
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="#C3C3C3"/>
+                            <Setter Property="Foreground" Value="#C3C3C3"/>
+                        </Trigger>
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#C3C3C3"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+<!-- Стиль для элементов списка ComboBox -->
+<Style TargetType="ComboBoxItem">
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="Cursor" Value="Hand"/> <!-- Установка изменения курсора на "руку" -->
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+            <Setter Property="Background" Value="#C3C3C3"/> <!-- Опционально, можно задать цвет фона при наведении -->
+            <Setter Property="Cursor" Value="Hand"/> <!-- Изменение курсора -->
+        </Trigger>
+        <Trigger Property="IsSelected" Value="True">
+            <Setter Property="Background" Value="#C3C3C3"/> <!-- Опционально, цвет фона для выбранного элемента -->
+        </Trigger>
+    </Style.Triggers>
+</Style>
+    
 </ResourceDictionary>
