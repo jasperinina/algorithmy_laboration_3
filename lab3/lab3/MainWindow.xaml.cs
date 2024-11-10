@@ -19,6 +19,7 @@ public partial class MainWindow : Window
         {
             stackPage.ClearDynamicElements();
         }
+        
         MainFrame.Navigate(new StackPage(this));
     }
 
@@ -26,11 +27,23 @@ public partial class MainWindow : Window
     private void QueueRadioButton_Checked(object sender, RoutedEventArgs e)
     {
         // Очистить динамически добавленные элементы на текущей странице
-        if (MainFrame.Content is QueuePage queuePage)
+        if (MainFrame.Content is StackPage stackPage)
         {
-            queuePage.ClearDynamicElements();
+            stackPage.ClearDynamicElements();
+        }
+        
+        MainFrame.Navigate(new QueuePage(this));
+    }
+    
+    // Переход на страницу с алгоритмами
+    private void AlgorithmsRadioButton_Checked(object sender, RoutedEventArgs e)
+    {
+        // Очистить динамически добавленные элементы на текущей странице
+        if (MainFrame.Content is StackPage stackPage)
+        {
+            stackPage.ClearDynamicElements();
         }
             
-        MainFrame.Navigate(new QueuePage(this));
+        MainFrame.Navigate(new AlgorithmsPage(this));
     }
 }

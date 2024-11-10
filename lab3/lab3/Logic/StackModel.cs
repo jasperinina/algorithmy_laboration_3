@@ -35,7 +35,7 @@ public class StackModel
             Next = top
         };
         top = newNode;
-        outputHandler?.Invoke($"Элемент '{elem}' добавлен в стек.");
+        outputHandler?.Invoke($"Элемент '{elem}' добавлен в стек");
     }
 
     // Операция Pop - удаляет и возвращает элемент с вершины стека
@@ -49,7 +49,7 @@ public class StackModel
 
         string poppedData = top.Data;
         top = top.Next;
-        outputHandler?.Invoke($"Элемент '{poppedData}' удален из стека.");
+        outputHandler?.Invoke($"Элемент '{poppedData}' удален из стека");
         return poppedData;
     }
 
@@ -61,7 +61,7 @@ public class StackModel
             return null;
         }
 
-        outputHandler?.Invoke($"Вершина стека: '{top.Data}'.");
+        outputHandler?.Invoke($"Вершина стека: '{top.Data}'");
         return top.Data;
     }
 

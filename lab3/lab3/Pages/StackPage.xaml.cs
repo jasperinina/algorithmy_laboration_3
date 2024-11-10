@@ -84,7 +84,7 @@ public partial class StackPage : Page
             Content = "Прочитать файл",
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 220, 0, 0),
+            Margin = new Thickness(0, 180, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonStyle")
         };
         readFileButton.Click += (s, e) => HandleButtonClick("Прочитать файл");

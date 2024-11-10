@@ -85,7 +85,7 @@ public class FileHandlerStack
                         break;
                     case "4":
                         bool isEmpty = stackModel.IsEmpty();
-                        outputHandler(isEmpty ? "Стек пуст." : "Стек не пуст.");
+                        outputHandler(isEmpty ? "Стек пуст" : "Стек не пуст");
                         break;
                     case "5":
                         stackModel.Print(outputHandler);

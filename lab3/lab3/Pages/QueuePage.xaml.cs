@@ -11,9 +11,4 @@ public partial class QueuePage : Page
         _mainWindow = mainWindow;
     }
     
-    // Метод для очистки динамических элементов
-    public void ClearDynamicElements()
-    { 
-        _mainWindow.PageContentControl.Content = null;
-    }
 }
