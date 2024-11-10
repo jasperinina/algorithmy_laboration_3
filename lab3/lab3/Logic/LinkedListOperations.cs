@@ -1,13 +1,27 @@
 ﻿namespace lab3.logic;
 
-// Реализация операций со связным списком
-
 public class LinkedListOperations
 {
-    // 1. Переворачивает список L
+    private readonly Action<string> outputHandler;
+
+    public LinkedListOperations(Action<string> outputHandler)
+    {
+        this.outputHandler = outputHandler;
+    }
+
+    // Задание 1: Перевернуть список
     public void ReverseList1(ref Node head)
     {
-        Node prev = null, current = head, next = null;
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Нечего переворачивать.");
+            return;
+        }
+
+        Node prev = null;
+        Node current = head;
+        Node next = null;
+
         while (current != null)
         {
             next = current.Next;
@@ -18,11 +32,20 @@ public class LinkedListOperations
         head = prev;
     }
 
-    // 2. Переносит последний элемент в начало
-    public void MoveLastToFront2(ref Node head)
+    // Задание 2: Перенести последний элемент в начало
+    public void MoveLastToFirst2(ref Node head)
     {
-        if (head == null || head.Next == null)
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
             return;
+        }
+
+        if (head.Next == null)
+        {
+            outputHandler?.Invoke("Предупреждение: в списке только один элемент. Операция не изменила список.");
+            return;
+        }
 
         Node secondLast = null;
         Node last = head;
@@ -38,47 +61,73 @@ public class LinkedListOperations
         head = last;
     }
 
-    // 2. Переносит первый элемент в конец
-    public void MoveFirstToEnd2(ref Node head)
+    // Задание 2 (альтернативное): Перенести первый элемент в конец
+    public void MoveFirstToLast2(ref Node head)
     {
-        if (head == null || head.Next == null)
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
             return;
+        }
+
+        if (head.Next == null)
+        {
+            outputHandler?.Invoke("Предупреждение: в списке только один элемент. Операция не изменила список.");
+            return;
+        }
 
         Node first = head;
-        head = head.Next;
-        first.Next = null;
-
         Node current = head;
+
         while (current.Next != null)
         {
             current = current.Next;
         }
+
+        head = head.Next;
         current.Next = first;
+        first.Next = null;
     }
 
-    // 3. Определяет количество различных элементов в списке
-    public int CountUniqueElements3(Node head)
+    // Задание 3: Подсчитать количество различных элементов
+    public int CountDistinctElements3(Node head)
     {
-        var set = new HashSet<string>();
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст.");
+            return 0;
+        }
+
+        HashSet<string> elements = new HashSet<string>();
         Node current = head;
+
         while (current != null)
         {
-            set.Add(current.Data);
+            elements.Add(current.Data);
             current = current.Next;
         }
-        return set.Count;
+        return elements.Count;
     }
 
-    // 4. Удаляет неуникальные элементы
-    public void RemoveNonUnique4(ref Node head)
+    // Задание 4: Удалить неуникальные элементы
+    public void RemoveNonUniqueElements4(ref Node head)
     {
-        var countMap = new Dictionary<string, int>();
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return;
+        }
+
+        Dictionary<string, int> counts = new Dictionary<string, int>();
         Node current = head;
+
         while (current != null)
         {
-            if (!countMap.ContainsKey(current.Data))
-                countMap[current.Data] = 0;
-            countMap[current.Data]++;
+            if (counts.ContainsKey(current.Data))
+                counts[current.Data]++;
+            else
+                counts[current.Data] = 1;
+
             current = current.Next;
         }
 
@@ -87,11 +136,14 @@ public class LinkedListOperations
         Node prev = dummy;
         current = head;
 
+        bool removed = false;
+
         while (current != null)
         {
-            if (countMap[current.Data] > 1)
+            if (counts[current.Data] > 1)
             {
                 prev.Next = current.Next;
+                removed = true;
             }
             else
             {
@@ -101,36 +153,101 @@ public class LinkedListOperations
         }
 
         head = dummy.Next;
+
+        if (!removed)
+        {
+            outputHandler?.Invoke("Не найдено неуникальных элементов для удаления.");
+        }
     }
 
-    // 5. Вставляет список самого в себя после первого вхождения элемента x
+    // Задание 5: Вставить список самого в себя после первого вхождения X
     public void InsertSelfAfterX5(ref Node head, string x)
     {
-        Node current = head;
-        while (current != null && current.Data != x)
+        if (head == null)
         {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(x))
+        {
+            outputHandler?.Invoke("Ошибка: значение X не задано.");
+            return;
+        }
+
+        Node current = head;
+
+        while (current != null)
+        {
+            if (current.Data == x)
+            {
+                Node selfCopy = CopyList(head);
+                Node temp = current.Next;
+                current.Next = selfCopy;
+
+                // Переходим к концу скопированного списка
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                }
+                current.Next = temp;
+                return;
+            }
             current = current.Next;
         }
 
-        if (current == null)
-            return; // x не найден
-
-        Node copy = CloneList(head);
-        Node temp = current.Next;
-        current.Next = copy;
-
-        while (copy.Next != null)
-        {
-            copy = copy.Next;
-        }
-        copy.Next = temp;
+        outputHandler?.Invoke($"Элемент '{x}' не найден в списке.");
     }
 
-    // 6. Вставляет новый элемент E в упорядоченный по не убыванию список
-    public void InsertInOrder6(ref Node head, string data)
+    // Вспомогательная функция для копирования списка
+    private Node CopyList(Node head)
     {
-        Node newNode = new Node(data);
-        if (head == null || string.Compare(head.Data, data) >= 0)
+        if (head == null)
+            return null;
+
+        Node newHead = new Node(head.Data);
+        Node currentOld = head.Next;
+        Node currentNew = newHead;
+
+        while (currentOld != null)
+        {
+            currentNew.Next = new Node(currentOld.Data);
+            currentOld = currentOld.Next;
+            currentNew = currentNew.Next;
+        }
+        return newHead;
+    }
+
+    // Задание 6: Вставить элемент E в упорядоченный список
+    public void InsertInOrder6(ref Node head, string E)
+    {
+        if (string.IsNullOrEmpty(E))
+        {
+            outputHandler?.Invoke("Ошибка: значение E не задано.");
+            return;
+        }
+
+        if (!int.TryParse(E, out int eValue))
+        {
+            outputHandler?.Invoke($"Ошибка: не удалось преобразовать '{E}' в число.");
+            return;
+        }
+
+        Node newNode = new Node(E);
+
+        if (head == null)
+        {
+            head = newNode;
+            return;
+        }
+
+        if (!int.TryParse(head.Data, out int headValue))
+        {
+            outputHandler?.Invoke($"Ошибка: не удалось преобразовать '{head.Data}' в число.");
+            return;
+        }
+
+        if (eValue <= headValue)
         {
             newNode.Next = head;
             head = newNode;
@@ -138,8 +255,18 @@ public class LinkedListOperations
         }
 
         Node current = head;
-        while (current.Next != null && string.Compare(current.Next.Data, data) < 0)
+
+        while (current.Next != null)
         {
+            if (!int.TryParse(current.Next.Data, out int nextValue))
+            {
+                outputHandler?.Invoke($"Ошибка: не удалось преобразовать '{current.Next.Data}' в число.");
+                return;
+            }
+
+            if (eValue <= nextValue)
+                break;
+
             current = current.Next;
         }
 
@@ -147,37 +274,64 @@ public class LinkedListOperations
         current.Next = newNode;
     }
 
-    // 7. Удаляет все элементы E из списка
-    public void RemoveAll7(ref Node head, string data)
+    // Задание 7: Удалить все элементы E
+    public void RemoveAll7(ref Node head, string E)
     {
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(E))
+        {
+            outputHandler?.Invoke("Ошибка: значение E не задано.");
+            return;
+        }
+
         Node dummy = new Node("");
         dummy.Next = head;
-        Node prev = dummy, current = head;
+        Node current = dummy;
+        bool removed = false;
 
-        while (current != null)
+        while (current.Next != null)
         {
-            if (current.Data == data)
+            if (current.Next.Data == E)
             {
-                prev.Next = current.Next;
+                current.Next = current.Next.Next;
+                removed = true;
             }
             else
             {
-                prev = current;
+                current = current.Next;
             }
-            current = current.Next;
         }
-
         head = dummy.Next;
+
+        if (!removed)
+        {
+            outputHandler?.Invoke($"Элемент '{E}' не найден в списке.");
+        }
     }
 
-    // 8. Вставляет новый элемент F перед первым вхождением E
-    public void InsertBefore8(ref Node head, string f, string e)
+    // Задание 8: Вставить элемент F перед первым вхождением E
+    public void InsertBefore8(ref Node head, string F, string E)
     {
-        Node newNode = new Node(f);
-        if (head == null)
+        if (string.IsNullOrEmpty(F) || string.IsNullOrEmpty(E))
+        {
+            outputHandler?.Invoke("Ошибка: значения F и/или E не заданы.");
             return;
+        }
 
-        if (head.Data == e)
+        Node newNode = new Node(F);
+
+        if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return;
+        }
+
+        if (head.Data == E)
         {
             newNode.Next = head;
             head = newNode;
@@ -185,7 +339,8 @@ public class LinkedListOperations
         }
 
         Node current = head;
-        while (current.Next != null && current.Next.Data != e)
+
+        while (current.Next != null && current.Next.Data != E)
         {
             current = current.Next;
         }
@@ -195,124 +350,150 @@ public class LinkedListOperations
             newNode.Next = current.Next;
             current.Next = newNode;
         }
+        else
+        {
+            outputHandler?.Invoke($"Элемент '{E}' не найден в списке.");
+        }
     }
 
-    // 9. Дописывает к списку L список E
-    public void AppendList9(ref Node l, Node e)
+    // Задание 9: Дописать к списку L список E
+    public void AppendList9(ref Node L, Node E)
     {
-        if (l == null)
+        if (L == null && E == null)
         {
-            l = CloneList(e);
+            outputHandler?.Invoke("Ошибка: оба списка пусты. Операция невозможна.");
             return;
         }
 
-        Node current = l;
+        if (L == null)
+        {
+            L = E;
+            return;
+        }
+
+        Node current = L;
+
         while (current.Next != null)
         {
             current = current.Next;
         }
 
-        current.Next = CloneList(e);
+        current.Next = E;
     }
 
-    // 10. Разбивает список по первому вхождению числа x
-    public (Node, Node) SplitByX10(Node head, string x)
+    // Задание 10: Разбить список по первому вхождению X
+    public (Node firstPart, Node secondPart) SplitByX10(Node head, string X)
     {
-        Node dummy = new Node("");
-        dummy.Next = head;
-        Node prev = dummy, current = head;
-
-        while (current != null && current.Data != x)
+        if (head == null)
         {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return (null, null);
+        }
+
+        if (string.IsNullOrEmpty(X))
+        {
+            outputHandler?.Invoke("Ошибка: значение X не задано.");
+            return (head, null);
+        }
+
+        Node current = head;
+        Node prev = null;
+
+        while (current != null)
+        {
+            if (current.Data == X)
+            {
+                if (prev != null)
+                {
+                    prev.Next = null;
+                }
+                else
+                {
+                    head = null;
+                }
+                return (head, current);
+            }
             prev = current;
             current = current.Next;
         }
 
-        if (current == null)
-        {
-            return (head, null);
-        }
-
-        prev.Next = null;
-        return (head, current);
+        outputHandler?.Invoke($"Элемент '{X}' не найден в списке. Второй список будет пустым.");
+        return (head, null);
     }
 
-    // 11. Удваивает список
-    public void DoubleList11(ref Node head)
+    // Задание 11: Удвоить список
+    public void DuplicateList11(ref Node head)
     {
         if (head == null)
+        {
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
             return;
+        }
 
-        Node copy = CloneList(head);
         Node current = head;
+
         while (current.Next != null)
         {
             current = current.Next;
         }
+
+        Node copy = CopyList(head);
         current.Next = copy;
     }
 
-    // 12. Меняет местами два элемента списка
+    // Задание 12: Поменять местами два элемента списка
     public void SwapNodes12(ref Node head, string data1, string data2)
     {
-        if (data1 == data2)
-            return;
-
-        Node prev1 = null, curr1 = head;
-        while (curr1 != null && curr1.Data != data1)
-        {
-            prev1 = curr1;
-            curr1 = curr1.Next;
-        }
-
-        Node prev2 = null, curr2 = head;
-        while (curr2 != null && curr2.Data != data2)
-        {
-            prev2 = curr2;
-            curr2 = curr2.Next;
-        }
-
-        if (curr1 == null || curr2 == null)
-            return;
-
-        if (prev1 != null)
-        {
-            prev1.Next = curr2;
-        }
-        else
-        {
-            head = curr2;
-        }
-
-        if (prev2 != null)
-        {
-            prev2.Next = curr1;
-        }
-        else
-        {
-            head = curr1;
-        }
-
-        (curr1.Next, curr2.Next) = (curr2.Next, curr1.Next);
-    }
-
-    // Клонирует список
-    private Node CloneList(Node head)
-    {
         if (head == null)
-            return null;
-
-        Node newHead = new Node(head.Data);
-        Node current = newHead;
-        Node original = head.Next;
-
-        while (original != null)
         {
-            current.Next = new Node(original.Data);
-            current = current.Next;
-            original = original.Next;
+            outputHandler?.Invoke("Ошибка: список пуст. Операция невозможна.");
+            return;
         }
 
-        return newHead;
+        if (string.IsNullOrEmpty(data1) || string.IsNullOrEmpty(data2))
+        {
+            outputHandler?.Invoke("Ошибка: значения для обмена не заданы.");
+            return;
+        }
+
+        if (data1 == data2)
+        {
+            outputHandler?.Invoke("Оба элемента имеют одинаковые значения. Обмен не требуется.");
+            return;
+        }
+
+        Node prevNode1 = null, currNode1 = head;
+        while (currNode1 != null && currNode1.Data != data1)
+        {
+            prevNode1 = currNode1;
+            currNode1 = currNode1.Next;
+        }
+
+        Node prevNode2 = null, currNode2 = head;
+        while (currNode2 != null && currNode2.Data != data2)
+        {
+            prevNode2 = currNode2;
+            currNode2 = currNode2.Next;
+        }
+
+        if (currNode1 == null || currNode2 == null)
+        {
+            outputHandler?.Invoke("Один или оба элемента не найдены в списке.");
+            return;
+        }
+
+        // Если currNode1 или currNode2 являются головой списка
+        if (prevNode1 != null)
+            prevNode1.Next = currNode2;
+        else
+            head = currNode2;
+
+        if (prevNode2 != null)
+            prevNode2.Next = currNode1;
+        else
+            head = currNode1;
+
+        // Меняем next указатели
+        (currNode1.Next, currNode2.Next) = (currNode2.Next, currNode1.Next);
     }
 }
