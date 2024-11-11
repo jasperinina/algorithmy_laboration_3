@@ -29,7 +29,9 @@
                              Margin="0,0,0,10" FontFamily="{StaticResource EuclidSquareRegular}" Checked="QueueRadioButton_Checked"/>
                 <RadioButton Content="Алгоритмы" GroupName="AlgorithmType" Width="300" Height="30" HorizontalAlignment="Left" FontWeight="Regular" FontSize="16" 
                              Margin="0,0,0,10" FontFamily="{StaticResource EuclidSquareRegular}" Checked="AlgorithmsRadioButton_Checked"/>
-                
+                <RadioButton Content="Деревья" GroupName="AlgorithmType" Width="300" Height="30" HorizontalAlignment="Left" FontWeight="Regular" FontSize="16" 
+                             Margin="0,0,0,10" FontFamily="{StaticResource EuclidSquareRegular}" Checked="TreesRadioButton_Checked"/>
+
                 <!-- Динамический контент для каждой страницы -->
                 <ContentControl x:Name="PageContentControl" Margin="0,20,0,0" />
             </StackPanel>

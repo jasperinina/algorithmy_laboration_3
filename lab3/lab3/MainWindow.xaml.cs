@@ -46,4 +46,14 @@ public partial class MainWindow : Window
             
         MainFrame.Navigate(new AlgorithmsPage(this));
     }
+    private void TreesRadioButton_Checked(object sender, RoutedEventArgs e)
+    {
+        // Очистить динамически добавленные элементы на текущей странице
+        if (MainFrame.Content is StackPage stackPage)
+        {
+            stackPage.ClearDynamicElements();
+        }
+
+        MainFrame.Navigate(new TreePage(this));
+    }
 }
