@@ -29,5 +29,22 @@ namespace lab3.Logic
             }
             return root.Data + " " + PreorderPrint(root.Left) + PreorderPrint(root.Right);
         }
+        public string InorderPrint(TreeNode root)
+        {
+            if (root == null)
+            {
+                return "* ";
+            }
+            return InorderPrint(root.Left) + root.Data + " " + InorderPrint(root.Right);
+        }
+
+        public string PostorderPrint(TreeNode root)
+        {
+            if (root == null)
+            {
+                return "* ";
+            }
+            return PostorderPrint(root.Left) + PostorderPrint(root.Right) + root.Data + " ";
+        }
     }
 }
