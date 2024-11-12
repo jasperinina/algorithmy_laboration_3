@@ -88,5 +88,4 @@ public class InfixToPostfixConverter
             _ => 0
         };
     }
-
 }
