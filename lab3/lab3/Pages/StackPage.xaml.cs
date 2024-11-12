@@ -95,7 +95,7 @@ public partial class StackPage : Page
         Content = "График зависимости",
         Width = 360,
         HorizontalAlignment = HorizontalAlignment.Left,
-        Margin = new Thickness(0, 20, 0, 0),
+        Margin = new Thickness(0, 60, 0, 0),
         Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
         Visibility = Visibility.Collapsed // Скрыта по умолчанию
     };

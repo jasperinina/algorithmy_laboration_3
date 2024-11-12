@@ -1,0 +1,13 @@
+﻿<Window x:Class="lab3.Utilities.QueueAnalyzer.QueueC_.GraphQueueDifferentContent"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:lab3.Utilities.QueueAnalyzer.QueueC_"
+        xmlns:wpf="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+        mc:Ignorable="d"
+        Title="График выполнения операций" Height="800" Width="1000">
+    <Grid>
+        <wpf:WpfPlot Name="wpfPlot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid>
+</Window>

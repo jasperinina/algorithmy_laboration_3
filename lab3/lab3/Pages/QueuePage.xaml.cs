@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using lab3.Utilities;
 using lab3.Utilities.QueueAnalyzer;
+using lab3.Utilities.QueueAnalyzer.QueueC_;
 
 namespace lab3.Pages;
 
@@ -64,7 +65,7 @@ public partial class QueuePage : Page
             Content = "Прочитать файл",
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 172, 0, 0),
+            Margin = new Thickness(0, 50, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonStyle")
         };
         readFileButton.Click += ReadFileButton_Click;
@@ -89,6 +90,26 @@ public partial class QueuePage : Page
         };
         graphButton2.Click += GraphDifferentComposition_Click;
         
+        Button graphButtonCSharpQueue = new Button
+        {
+            Content = "График зависимости C# (Различная длина)",
+            Width = 360,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 20, 0, 0),
+            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle")
+        };
+        graphButtonCSharpQueue.Click += GraphCSharpQueue_Click;
+        
+        Button graphButtonCSharpQueue2 = new Button
+        {
+            Content = "График зависимости C# (Различный состав)",
+            Width = 360,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 20, 0, 0),
+            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle")
+        };
+        graphButtonCSharpQueue2.Click += GraphCSharpDifferentComposition_Click;
+        
         panel.Children.Add(headerTextBlock);
         panel.Children.Add(depthTextBlock);
         panel.Children.Add(fileContentTextBox);
@@ -96,6 +117,8 @@ public partial class QueuePage : Page
         panel.Children.Add(readFileButton);
         panel.Children.Add(graphButton1);
         panel.Children.Add(graphButton2);
+        panel.Children.Add(graphButtonCSharpQueue);
+        panel.Children.Add(graphButtonCSharpQueue2);
 
         _mainWindow.PageContentControl.Content = panel;
     }
@@ -168,6 +191,40 @@ public partial class QueuePage : Page
         else
         {
             // Логика, если данных для графика нет
+            MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+    
+    private void GraphCSharpQueue_Click(object sender, RoutedEventArgs e)
+    {
+        string filePath = "inputQueue_Test.txt"; // Путь к подготовленному файлу
+        var analyzer = new CSharpQueuePerformanceAnalyzer(filePath);
+        var (dataSizes, times) = analyzer.AnalyzePerformanceWithCSharpQueue();
+
+        if (dataSizes.Length > 0 && times.Length > 0)
+        {
+            var graphWindow = new CSharpGraphQueue(dataSizes, times);
+            graphWindow.Show();
+        }
+        else
+        {
+            MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void GraphCSharpDifferentComposition_Click(object sender, RoutedEventArgs e)
+    {
+        string filePath = "inputQueueTest_DifferentContent.txt"; // Путь к тестовому файлу
+        var analyzer = new CSharpQueueDifferentContentAnalyzer(filePath);
+        var (dataSizes, times, labels) = analyzer.AnalyzePerformanceWithCSharpQueue();
+
+        if (dataSizes.Length > 0 && times.Length > 0)
+        {
+            var graphWindow = new GraphQueueDifferentContent(dataSizes, times, labels);
+            graphWindow.Show();
+        }
+        else
+        {
             MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
