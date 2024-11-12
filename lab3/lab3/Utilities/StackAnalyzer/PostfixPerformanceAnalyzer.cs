@@ -64,7 +64,7 @@ public class PostfixPerformanceAnalyzer
     {
         using (StreamWriter writer = new StreamWriter(path))
         {
-            for (int i = 1; i <= 10000; i++)
+            for (int i = 1; i <= 5000; i++)
             {
                 string expression = GenerateRandomPostfixExpression(i);
                 writer.WriteLine(expression);

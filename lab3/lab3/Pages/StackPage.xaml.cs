@@ -91,75 +91,66 @@ public partial class StackPage : Page
 
         // Добавляем кнопку графика только для определённых операций
         Button graphButton = new Button
+    {
+        Content = "График зависимости",
+        Width = 360,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        Margin = new Thickness(0, 20, 0, 0),
+        Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
+        Visibility = Visibility.Collapsed // Скрыта по умолчанию
+    };
+    graphButton.Click += (s, e) =>
+    {
+        if (_selectedOperation == "Операции со стеком")
         {
-            Content = "График зависимости",
-            Width = 360,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 20, 0, 0),
-            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
-            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
-        };
-        // Кнопка добавляется только если не выбрана операция "Перевод в постфиксную запись"
-        operationsComboBox.SelectionChanged += (s, e) =>
+            GraphStack_Click(s, e);
+        }
+        else if (_selectedOperation == "Счет постфиксной записи")
         {
-            if (operationsComboBox.SelectedItem != null && (operationsComboBox.SelectedItem.ToString() == "Операции со стеком"|| operationsComboBox.SelectedItem.ToString() == "Счет постфиксной записи"))
-            {
-                graphButton.Visibility = Visibility.Visible; // Показываем кнопку
-            }
-            else
-            {
-                graphButton.Visibility = Visibility.Collapsed; // Скрываем кнопку
-            }
-            
-        };
-        
-        Button graphButtonCSharp = new Button
-        {
-            Content = "График зависимости C#",
-            Width = 360,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 20, 0, 0),
-            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
-            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
-        };
-        graphButtonCSharp.Click += (s, e) => GraphCSharpStack_Click(); 
+            GraphPostfix_Click(s, e);
+        }
+    };
 
-        // Логика отображения кнопки при выборе операции
-        operationsComboBox.SelectionChanged += (s, e) =>
+    Button graphButtonCSharp = new Button
+    {
+        Content = "График зависимости C#",
+        Width = 360,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        Margin = new Thickness(0, 20, 0, 0),
+        Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
+        Visibility = Visibility.Collapsed // Скрыта по умолчанию
+    };
+    graphButtonCSharp.Click += (s, e) =>
+    {
+        if (_selectedOperation == "Операции со стеком")
         {
-            if (operationsComboBox.SelectedItem != null && operationsComboBox.SelectedItem.ToString() == "Операции со стеком")
-            {
-                graphButtonCSharp.Visibility = Visibility.Visible; // Показываем кнопку
-            }
-            else
-            {
-                graphButtonCSharp.Visibility = Visibility.Collapsed; // Скрываем кнопку
-            }
-        };
-        
-        Button graphButtonCSharp2 = new Button
+            GraphCSharpStack_Click();
+        }
+        else if (_selectedOperation == "Счет постфиксной записи")
         {
-            Content = "График зависимости C#",
-            Width = 360,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 20, 0, 0),
-            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
-            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
-        };
-        graphButtonCSharp2.Click += (s, e) => GraphCSharpPostfix_Click(); 
+            GraphCSharpPostfix_Click();
+        }
+    };
 
-        // Логика отображения кнопки при выборе операции
-        operationsComboBox.SelectionChanged += (s, e) =>
+    // Обработчик для отображения/скрытия кнопок
+    operationsComboBox.SelectionChanged += (s, e) =>
+    {
+        if (operationsComboBox.SelectedItem != null)
         {
-            if (operationsComboBox.SelectedItem != null && operationsComboBox.SelectedItem.ToString() == "Счет постфиксной записи")
+            _selectedOperation = operationsComboBox.SelectedItem.ToString();
+            // Управление видимостью кнопок
+            if (_selectedOperation == "Операции со стеком" || _selectedOperation == "Счет постфиксной записи")
             {
-                graphButtonCSharp.Visibility = Visibility.Visible; // Показываем кнопку
+                graphButton.Visibility = Visibility.Visible;
+                graphButtonCSharp.Visibility = Visibility.Visible;
             }
             else
             {
-                graphButtonCSharp.Visibility = Visibility.Collapsed; // Скрываем кнопку
+                graphButton.Visibility = Visibility.Collapsed;
+                graphButtonCSharp.Visibility = Visibility.Collapsed;
             }
-        };
+        }
+    };
 
         panel.Children.Add(header1TextBlock);
         panel.Children.Add(operationsComboBox);
