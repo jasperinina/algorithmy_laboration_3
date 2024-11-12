@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace lab3.Logic
+﻿namespace lab3.Logic
 {
     public class TreeNode
     {
@@ -19,6 +13,7 @@ namespace lab3.Logic
             Right = null;
         }
     }
+    
     public class BinaryTree
     {
         public string PreorderPrint(TreeNode root)
@@ -29,6 +24,7 @@ namespace lab3.Logic
             }
             return root.Data + " " + PreorderPrint(root.Left) + PreorderPrint(root.Right);
         }
+        
         public string InorderPrint(TreeNode root)
         {
             if (root == null)

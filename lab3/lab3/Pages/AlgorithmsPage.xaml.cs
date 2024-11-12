@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using lab3.logic;
 using lab3.Utilities;
 
@@ -44,7 +43,7 @@ public partial class AlgorithmsPage : Page
         ComboBox operationsComboBox = new ComboBox
         {
             Width = 360,
-            Margin = new Thickness(0, 0, 0, 30),
+            Margin = new Thickness(0, 8, 0, 30),
             HorizontalAlignment = HorizontalAlignment.Left,
             Style = (Style)_mainWindow.FindResource("PopUp")
         };
@@ -232,7 +231,7 @@ public partial class AlgorithmsPage : Page
             Content = "Выполнить",
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 20, 0, 0),
+            Margin = new Thickness(0, 190, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonStyle")
         };
         executeButton.Click += (s, e) => ExecuteAlgorithm(selectedIndex);

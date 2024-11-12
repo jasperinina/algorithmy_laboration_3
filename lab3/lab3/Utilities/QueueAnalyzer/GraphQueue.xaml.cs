@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 
-namespace lab3.Utilities.StackAnalyzer;
+namespace lab3.Utilities.QueueAnalyzer;
 
-public partial class CraphPostfixConverter : Window
+public partial class GraphQueue : Window
 {
-    public CraphPostfixConverter(double[] dataSizes, double[] times)
+    public GraphQueue(double[] dataSizes, double[] times)
     {
         InitializeComponent();
         wpfPlot.Plot.Add.Scatter(dataSizes, times);

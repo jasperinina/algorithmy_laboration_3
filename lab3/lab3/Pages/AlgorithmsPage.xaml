@@ -18,7 +18,7 @@
     
     <Grid>
         <!-- Правая часть -->
-        <StackPanel Margin="10,30,0,0">
+        <StackPanel Margin="10,20,0,0">
             <!-- Заголовок -->
             <TextBlock Text="Результаты тестирования"
                        Style="{StaticResource HeaderTextBlockStyle}"

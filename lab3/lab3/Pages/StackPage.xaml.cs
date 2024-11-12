@@ -19,23 +19,23 @@ public partial class StackPage : Page
 
     private void AddStackControls()
     {
-        StackPanel panel = new StackPanel();
-        { 
-            Margin = new Thickness(0, 30, 0, 0); 
-            HorizontalAlignment = HorizontalAlignment.Left;
+        StackPanel panel = new StackPanel
+        {
+            Margin = new Thickness(0, 0, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left
         };
-        
+
         TextBlock header1TextBlock = new TextBlock
         {
-            Text = "Выберите операцию", 
+            Text = "Выберите операцию",
             HorizontalAlignment = HorizontalAlignment.Left,
             Style = (Style)_mainWindow.FindResource("HeaderTextBlockStyle")
         };
-        
+
         ComboBox operationsComboBox = new ComboBox
         {
             Width = 360,
-            Margin = new Thickness(0, 0, 0, 30),
+            Margin = new Thickness(0, 8, 0, 30),
             HorizontalAlignment = HorizontalAlignment.Left,
             Style = (Style)_mainWindow.FindResource("PopUp")
         };
@@ -43,31 +43,31 @@ public partial class StackPage : Page
         operationsComboBox.Items.Add("Счет постфиксной записи");
         operationsComboBox.Items.Add("Перевод в постфиксную запись");
         operationsComboBox.SelectionChanged += OperationsComboBox_SelectionChanged;
-        
+
         TextBlock headerTextBlock = new TextBlock
         {
-            Text = "Введите параметры тестирования", 
+            Text = "Введите параметры тестирования",
             HorizontalAlignment = HorizontalAlignment.Left,
             Style = (Style)_mainWindow.FindResource("HeaderTextBlockStyle")
         };
-        
+
         TextBlock depthTextBlock = new TextBlock
         {
             Text = "Строка файла",
             HorizontalAlignment = HorizontalAlignment.Left,
             Margin = new Thickness(0, 20, 0, 8),
-            Style = (Style)_mainWindow.FindResource("TextBlockStyle") 
+            Style = (Style)_mainWindow.FindResource("TextBlockStyle")
         };
-        
+
         TextBox fileContentTextBox = new TextBox
         {
             Name = "FileContent",
             Width = 360,
             Margin = new Thickness(0, 0, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
-            Style = (Style)_mainWindow.FindResource("RoundedTextBoxStyle") 
+            Style = (Style)_mainWindow.FindResource("RoundedTextBoxStyle")
         };
-        
+
         Button overwriteFileButton = new Button
         {
             Content = "Перезаписать файл",
@@ -77,18 +77,18 @@ public partial class StackPage : Page
             Style = (Style)_mainWindow.FindResource("OverwriteFileButtonStyle")
         };
         overwriteFileButton.Click += (s, e) => HandleButtonClick("Перезаписать файл");
-        
-        
+
         Button readFileButton = new Button
         {
             Content = "Прочитать файл",
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 180, 0, 0),
+            Margin = new Thickness(0, 130, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonStyle")
         };
         readFileButton.Click += (s, e) => HandleButtonClick("Прочитать файл");
-        
+
+        // Добавляем кнопку графика только для определённых операций
         Button graphButton = new Button
         {
             Content = "График зависимости",
@@ -97,16 +97,23 @@ public partial class StackPage : Page
             Margin = new Thickness(0, 20, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle")
         };
-        graphButton.Click += (s, e) => HandleButtonClick("График зависимости");
-        
+        // Кнопка добавляется только если не выбрана операция "Перевод в постфиксную запись"
+        operationsComboBox.SelectionChanged += (s, e) =>
+        {
+            panel.Children.Remove(graphButton); // Удаляем, если уже есть
+            if (operationsComboBox.SelectedItem.ToString() != "Перевод в постфиксную запись")
+            {
+                panel.Children.Add(graphButton);
+            }
+        };
+
         panel.Children.Add(header1TextBlock);
         panel.Children.Add(operationsComboBox);
-        panel.Children.Add(headerTextBlock); 
+        panel.Children.Add(headerTextBlock);
         panel.Children.Add(depthTextBlock);
         panel.Children.Add(fileContentTextBox);
         panel.Children.Add(overwriteFileButton);
         panel.Children.Add(readFileButton);
-        panel.Children.Add(graphButton);
 
         _mainWindow.PageContentControl.Content = panel;
     }
@@ -163,10 +170,7 @@ public partial class StackPage : Page
                 {
                     ReadFileButtonConversion_Click(this, new RoutedEventArgs());
                 }
-                else if (buttonName == "График зависимости")
-                {
-                    GraphConversion_Click(this, new RoutedEventArgs());
-                }
+                // Удален случай "График зависимости" для этой операции
                 break;
 
             default:
@@ -213,24 +217,6 @@ public partial class StackPage : Page
         else
         {
             // Можно добавить логику, если данных для графика нет (например, показать сообщение)
-            MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-    
-    private void GraphConversion_Click(object sender, RoutedEventArgs e)
-    {
-        string filePath = "inputConversionPostfixTest.txt"; // Путь к подготовленному файлу
-        var analyzer = new InfixToPostfixPerformanceAnalyzer(filePath);
-        var (expressionLengths, times) = analyzer.AnalyzePerformance();
-
-        if (expressionLengths.Length > 0 && times.Length > 0)
-        {
-            CraphPostfixConverter graphWindow = new CraphPostfixConverter(expressionLengths, times);
-            graphWindow.Show();
-        }
-        else
-        {
-            // Вывод сообщения, если данных для построения графика нет
             MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
