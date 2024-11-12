@@ -21,6 +21,8 @@ public partial class GraphQueueDifferentComposition : Window
         wpfPlot.Plot.Title("График зависимости времени выполнения от состава операций");
         wpfPlot.Plot.XLabel("Состав набора команд");
         wpfPlot.Plot.YLabel("Время выполнения (мс)");
+        wpfPlot.Plot.Axes.Left.Max = xPositions.Max();
+        wpfPlot.Plot.Axes.Bottom.Max = times.Max();
         wpfPlot.Refresh();
     }
 }

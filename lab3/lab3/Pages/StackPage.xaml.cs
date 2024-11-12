@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using lab3.Utilities;
 using lab3.Utilities.StackAnalyzer;
+using lab3.Utilities.StackAnalyzer.StackC_;
 
 namespace lab3.Pages;
 
@@ -83,7 +84,7 @@ public partial class StackPage : Page
             Content = "Прочитать файл",
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 130, 0, 0),
+            Margin = new Thickness(0, 30, 0, 0),
             Style = (Style)_mainWindow.FindResource("RoundedButtonStyle")
         };
         readFileButton.Click += (s, e) => HandleButtonClick("Прочитать файл");
@@ -95,15 +96,68 @@ public partial class StackPage : Page
             Width = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
             Margin = new Thickness(0, 20, 0, 0),
-            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle")
+            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
+            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
         };
         // Кнопка добавляется только если не выбрана операция "Перевод в постфиксную запись"
         operationsComboBox.SelectionChanged += (s, e) =>
         {
-            panel.Children.Remove(graphButton); // Удаляем, если уже есть
-            if (operationsComboBox.SelectedItem.ToString() != "Перевод в постфиксную запись")
+            if (operationsComboBox.SelectedItem != null && (operationsComboBox.SelectedItem.ToString() == "Операции со стеком"|| operationsComboBox.SelectedItem.ToString() == "Счет постфиксной записи"))
             {
-                panel.Children.Add(graphButton);
+                graphButton.Visibility = Visibility.Visible; // Показываем кнопку
+            }
+            else
+            {
+                graphButton.Visibility = Visibility.Collapsed; // Скрываем кнопку
+            }
+            
+        };
+        
+        Button graphButtonCSharp = new Button
+        {
+            Content = "График зависимости C#",
+            Width = 360,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 20, 0, 0),
+            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
+            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
+        };
+        graphButtonCSharp.Click += (s, e) => GraphCSharpStack_Click(); 
+
+        // Логика отображения кнопки при выборе операции
+        operationsComboBox.SelectionChanged += (s, e) =>
+        {
+            if (operationsComboBox.SelectedItem != null && operationsComboBox.SelectedItem.ToString() == "Операции со стеком")
+            {
+                graphButtonCSharp.Visibility = Visibility.Visible; // Показываем кнопку
+            }
+            else
+            {
+                graphButtonCSharp.Visibility = Visibility.Collapsed; // Скрываем кнопку
+            }
+        };
+        
+        Button graphButtonCSharp2 = new Button
+        {
+            Content = "График зависимости C#",
+            Width = 360,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 20, 0, 0),
+            Style = (Style)_mainWindow.FindResource("RoundedButtonGraphStyle"),
+            Visibility = Visibility.Collapsed // Скрываем кнопку по умолчанию
+        };
+        graphButtonCSharp2.Click += (s, e) => GraphCSharpPostfix_Click(); 
+
+        // Логика отображения кнопки при выборе операции
+        operationsComboBox.SelectionChanged += (s, e) =>
+        {
+            if (operationsComboBox.SelectedItem != null && operationsComboBox.SelectedItem.ToString() == "Счет постфиксной записи")
+            {
+                graphButtonCSharp.Visibility = Visibility.Visible; // Показываем кнопку
+            }
+            else
+            {
+                graphButtonCSharp.Visibility = Visibility.Collapsed; // Скрываем кнопку
             }
         };
 
@@ -114,6 +168,8 @@ public partial class StackPage : Page
         panel.Children.Add(fileContentTextBox);
         panel.Children.Add(overwriteFileButton);
         panel.Children.Add(readFileButton);
+        panel.Children.Add(graphButton);
+        panel.Children.Add(graphButtonCSharp);
 
         _mainWindow.PageContentControl.Content = panel;
     }
@@ -217,6 +273,40 @@ public partial class StackPage : Page
         else
         {
             // Можно добавить логику, если данных для графика нет (например, показать сообщение)
+            MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+    
+    private void GraphCSharpStack_Click()
+    {
+        // Подготовка данных для анализа производительности
+        var analyzer = new CSharpStackPerformanceAnalyzer();
+        var (dataSizes, times) = analyzer.AnalyzePerformanceWithCSharpStack();
+
+        if (dataSizes.Length > 0 && times.Length > 0)
+        {
+            GraphStack graphWindow = new GraphStack(dataSizes, times);
+            graphWindow.Show();
+        }
+        else
+        {
+            MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+    
+    private void GraphCSharpPostfix_Click()
+    {
+        // Подготовка данных для анализа производительности
+        var analyzer = new CSharpPostfixPerformanceAnalyzer();
+        var (expressionLengths, times) = analyzer.AnalyzePerformanceWithCSharpStack();
+
+        if (expressionLengths.Length > 0 && times.Length > 0)
+        {
+            var graphWindow = new GraphPostfixWindow(expressionLengths, times);
+            graphWindow.Show();
+        }
+        else
+        {
             MessageBox.Show("Нет данных для построения графика.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
